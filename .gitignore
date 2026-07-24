@@ -24,3 +24,7 @@ yarn-error.log*
 
 /.vscode
 /.wrangler
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
