@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "flare-drive",
+  "compatibility_date": "2026-07-24",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "build"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
