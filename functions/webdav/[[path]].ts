@@ -89,3 +89,4 @@ export const onRequest: PagesFunction<{
   const handler = HANDLERS[method] ?? handleMethodNotAllowed;
   return handler({ bucket, path, request: context.request });
 };
+
