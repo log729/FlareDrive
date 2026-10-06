@@ -42,14 +42,27 @@ export const onRequest: PagesFunction<{
   WEBDAV_USERNAME: string;
   WEBDAV_PASSWORD: string;
   WEBDAV_PUBLIC_READ?: string;
+  PUBLIC_DIR?: string;
 }> = async function (context) {
   const env = context.env;
   const request: Request = context.request;
   if (request.method === "OPTIONS") return handleRequestOptions();
 
+  // 解析请求路径（用于判断是否命中公开目录）
+  const pathSegments = ((context.params as any)?.path || []) as string[];
+  const reqPath = decodeURIComponent(pathSegments.join("/"));
+
+  // 公开目录：PUBLIC_DIR 下的文件允许免鉴权读取（GET/HEAD/PROPFIND）
+  // 例如 PUBLIC_DIR=public，则 /webdav/public/xxx.mp4 可直接访问，其余路径照旧需要鉴权
+  // 未配置 PUBLIC_DIR 时该机制关闭，不影响现有行为
+  const publicDir = (env.PUBLIC_DIR || "").replace(/^\/+|\/+$/g, "");
+  const isPublicPath =
+    publicDir !== "" &&
+    (reqPath === publicDir || reqPath.startsWith(publicDir + "/"));
+
   const skipAuth =
-    env.WEBDAV_PUBLIC_READ === "1" &&
-    ["GET", "HEAD", "PROPFIND"].includes(request.method);
+    ["GET", "HEAD", "PROPFIND"].includes(request.method) &&
+    (env.WEBDAV_PUBLIC_READ === "1" || isPublicPath);
 
   if (!skipAuth) {
     if (!env.WEBDAV_USERNAME || !env.WEBDAV_PASSWORD)
