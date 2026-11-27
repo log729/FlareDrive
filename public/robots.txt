@@ -1,3 +1,11 @@
-# https://www.robotstxt.org/robotstxt.html
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Googlebot-News
+User-agent: Googlebot-Video
+User-agent: Google-InspectionTool
+User-agent: Baiduspider
+User-agent: Baiduspider-image
+Allow: /
+
 User-agent: *
-Disallow:
+Disallow: /
